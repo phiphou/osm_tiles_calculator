@@ -58,9 +58,12 @@ function check_bounds(bounds) {
 
 function check_zooms(zooms) {
   if (zooms.length == 0)
-    throw "bounds must be specified with --zooms or -z."
-  if (zooms.length != 2)
-    throw "bounds must be defined with 2 space separated values."
+    throw "zooms must be specified with --zooms or -z."
+  if (zooms.length > 2)
+    throw "zooms must be defined with no more than 2 space separated values."
+  for (var i = 0; i < zooms.length; i++)
+    if (typeof (zooms[i]) != 'number')
+      throw "zooms must be defined with number(s)."
   if (zooms[0] > zooms[1])
     throw "zoom1 must be lower than zoom2."
   if (zooms[0] < 0)
