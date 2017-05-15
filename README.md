@@ -32,7 +32,7 @@ $ osm_tiles_calculator --help for detailled usage instructions.
 ```
 ## Options
 
-##### `-bounds` ( `-b` ) (required)
+#### `-bounds` ( `-b` ) (required)
 
 Bounds of the area for witch you want to calculate the tiles needed amount.
 
@@ -45,7 +45,7 @@ Example :
 $ osm_tiles_calculator -b -2 45 3 48
 ```
 
-##### `-zooms` ( `-z` ) (optional)
+#### `-zooms` ( `-z` ) (optional)
 
 An optional option you can use to specify zoom or zoom range for the calculation. Default is range [0-20]
 
@@ -59,7 +59,7 @@ or
 $ osm_tiles_calculator -b -2 45 3 48 -z 13 15
 ```
 
-##### `-output` ( `-o` ) (optional)
+#### `-output` ( `-o` ) (optional)
 
 An optional option you can use to generate a .txt file containing the tiles count report.
 
@@ -78,7 +78,7 @@ or
 $ osm_tiles_calculator -b -2 45 3 48 -o "this is my file"
 ```
 
-##### `-csv` ( `-c` ) (optional)
+#### `-csv` ( `-c` ) (optional)
 
 An optional option you can use to generate a .csv file containing the tiles count report rather than the default .txt file.
 
