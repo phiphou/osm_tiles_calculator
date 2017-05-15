@@ -72,6 +72,21 @@ You can also specify the filename for the generated file :
 $ osm_tiles_calculator -b -2 45 3 48 -o my_file
 ```
 
+or
+
+```
+$ osm_tiles_calculator -b -2 45 3 48 -o "this is my file"
+```
+
+##### `-csv` ( `-c` ) (optional)
+
+An optional option you can use to generate a .csv file containing the tiles count report rather than the default .txt file.
+
+Must be used in conjunction with the `-out` ( `-o` ) flag.
+
+```
+$ osm_tiles_calculator -b -2 45 3 48 -o "my csv report" -c
+```
 
 ## License
 

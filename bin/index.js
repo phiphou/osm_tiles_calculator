@@ -2,11 +2,12 @@
 
 const fs = require('fs')
 const utils = require('../lib/utils')
+const default_filename = 'tiles_count'
 
 var argv = require('yargs')
   .usage('Usage: <command> [options]')
   .command('tilescalculator', 'Calculate tiles amount needed for a zoom level or range.')
-  .example('tilescalculator -bounds -zooms', 'Calculate tiles amount needed for a zoom level or range.')
+  .example('tilescalculator -bounds 2,46,3,48 -zooms 10-17', 'Calculate tiles amount needed for a zoom level or range.')
   .option('bounds', {
     alias: 'b',
     demandOption: true,
@@ -21,11 +22,18 @@ var argv = require('yargs')
   })
   .option('out', {
     alias: 'o',
-    describe: 'Write report in a .txt file. Default is tiles_count.txt',
+    describe: 'Write report in a .txt file. Default is tiles_count.txt. Use -o your_file to change it.',
     type: 'string'
   })
   .string('o')
+  .option('csv', {
+    alias: 'c',
+    describe: 'Write report in a .csv file rather than the defaut txt format. Default is tiles_count.csv. Must be used in conjonction with -out.',
+    type: 'boolean'
+  })
+  .boolean('c')
   .check(check_args)
+  .implies('csv', 'out')
   .showHelpOnFail(false, 'Specify --help or -h for usage instructions')
   .help('h')
   .alias('h', 'help')
@@ -35,6 +43,8 @@ var argv = require('yargs')
 function check_args(args, options) {
   check_bounds(args.bounds)
   check_zooms(args.zooms)
+  if (args.o === '')
+    args.o = args.out = default_filename
   return true
 }
 
@@ -74,20 +84,32 @@ function check_zooms(zooms) {
 
 function tiles4zooms(bounds, minZ, maxZ = minZ) {
   let total = 0
-  let output = `\r\nbounds: ${bounds}\r\nzoom(s): ${minZ}-${maxZ}\r\n\r\n`
   let i
+  let results = {
+    bounds: bounds,
+    zooms: [minZ, maxZ],
+    tiles: [],
+    total: null
+  }
+
   for (i = minZ; i <= maxZ; i++) {
     let count = utils.tiles4zoom(bounds, i)
     count = count == 0 ? 1 : count
-    output += `zoom ${i}: ${utils.number_format(count)}\r\n`
+    results.tiles.push({
+      zoom: i,
+      count: count
+    })
     total += count
   }
-  output += `\r\ntotal: ${utils.number_format(total)}`
+
+  results.total = total
+  let output = utils.to_txt(results)
   console.log(output)
-  output = `Tiles Calculator\r\n${output}`
   if (argv.hasOwnProperty('o')) {
-    let filename = argv.out || 'tiles_count'
-    fs.writeFileSync(`${filename}.txt`, output, 'utf8')
+    if (argv.c)
+      fs.writeFileSync(`${argv.out}.csv`, utils.to_csv(results), 'utf8')
+    else
+      fs.writeFileSync(`${argv.out}.txt`, output, 'utf8')
   }
 }
 
